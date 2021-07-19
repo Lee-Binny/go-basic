@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 //import reportWebVitals from './reportWebVitals';
-import websocektConnect from './websocket'
+import websocektConnect from './websocket';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const websocket = new websocektConnect();
 ReactDOM.render(

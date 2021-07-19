@@ -14,13 +14,15 @@ class websocketConnect {
         }
 
         this.websocket.onmessage = (message) => {
-            console.log("meesage1: " + message.data)
+            console.log("meesage: " + message.data)
         }
     }
 
-    sendMessage(message) {
-        console.log("send message: " + message)
-        this.websocket.send(message)
+    sendMessage(name, message) {
+        this.websocket.send(JSON.stringify({
+            name: name,
+            data: message
+        }))
     }
 }
 

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/contrib/static"
@@ -9,23 +10,17 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-func main() {
-	router := gin.Default()
-	router.Use(static.Serve("/", static.LocalFile("../client/build", true)))
-
-	router.GET("/ws", func(c *gin.Context) {
-		wshandler(c.Writer, c.Request)
-	})
-
-	router.Run(":3030")
-}
-
 var wsupgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 }
 
-func wshandler(w http.ResponseWriter, r *http.Request) {
+type Message struct {
+	Name string `json:"name"`
+	Data string `json:"data"`
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
 	conn, err := wsupgrader.Upgrade(w, r, nil)
 	if err != nil {
 		fmt.Println("Failed to set websocket upgrade: %+v", err)
@@ -33,11 +28,30 @@ func wshandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for {
-		t, msg, err := conn.ReadMessage()
-		fmt.Print(msg)
+		msg := &Message{}
+		err = conn.ReadJSON(msg)
 		if err != nil {
-			break
+			log.Println(err)
+			return
 		}
-		conn.WriteMessage(t, msg)
+
+		fmt.Println(msg)
+
+		err = conn.WriteJSON(msg)
+		if err != nil {
+			log.Println(err)
+			return
+		}
 	}
+}
+
+func main() {
+	router := gin.Default()
+	router.Use(static.Serve("/", static.LocalFile("../client/build", true)))
+
+	router.GET("/ws", func(c *gin.Context) {
+		handler(c.Writer, c.Request)
+	})
+
+	router.Run(":3030")
 }
