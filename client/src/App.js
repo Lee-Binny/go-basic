@@ -14,55 +14,15 @@ const App = () => {
   }
   
   const onClick = () => {
-    var newMessageList = messageList.push(message)
+    var newMessageList = messageList.concat(message)
     setMessageList(newMessageList)
     websocket.sendMessage(name, message)
   }
 
   const onStart = (name) => {
-    console.log("name: " + name)
     setName(name)
     setModalShow(false)
   }
-
-//   componentDidMount() { 
-//     setTimeout(() => { 
-//       websocket.addListener(this.messageListener) 
-//     }, 250) 
-//    } 
-   
-//   addMessage = (message) => { 
-//     let messageList = this.state.messageList.slice() 
-//     messageList.push(message) 
-//     this.setState({ messageList: messageList 
-//     }) 
-//   } 
-  
-//   messageListener = (message) => { 
-//     this.addMessage(message) 
-//   } 
-  
-//   handleMessage = (e) => { 
-//     e.preventDefault(); 
-//     let messageList = this.state.messageList.slice() 
-//     let message = { 
-//       payload: messageInput.current.value, 
-//       sender: nameInput.current.value 
-//     } 
-//     messageList.push(message) 
-//     this.setState({ 
-//       messageList: messageList 
-//     }) 
-//     websocket.sendMessage(JSON.stringify(message)) 
-//   } 
-    
-//   handleStart = (e) => { 
-//     e.preventDefault(); 
-//     this.setState({ 
-//       name: nameInput.current.value, 
-//       visible: true 
-//     }) 
-//   }
 
   return (
     <div className="App">
@@ -73,9 +33,9 @@ const App = () => {
       <p>name: {name}</p>
       <input type="text" name="message" placeholder="텍스트를 입력해주세요" onChange={onChange}/>
       <button onClick={onClick}>Send</button>
-      {messageList.map((value) => {
+      {messageList.map(value => {
         return (
-          <p>{value}</p>
+          <p>{name} : {value}</p>
         )
       })}
     </div>

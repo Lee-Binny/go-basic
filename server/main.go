@@ -22,6 +22,8 @@ type Message struct {
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	conn, err := wsupgrader.Upgrade(w, r, nil)
+	defer conn.Close()
+
 	if err != nil {
 		fmt.Println("Failed to set websocket upgrade: %+v", err)
 		return
