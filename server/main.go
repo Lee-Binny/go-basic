@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -15,10 +16,37 @@ var wsupgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-type Chat struct {
+type User struct {
+	Name string
+	Conn *websocket.Conn
+}
+
+type Messages struct {
 	Name    string `json:"name"`
 	Message string `json:"message"`
 	Time    string `json:"time"`
+}
+
+type Hub struct {
+	Users      map[string]*User
+	Messages   chan *Messages
+	Register   chan *User
+	UnRegister chan *User
+}
+
+func newHub() *Hub {
+	return &Hub{
+		Users:      make(map[string]*User),
+		Messages:   make(chan *Messages),
+		Register:   make(chan *User),
+		UnRegister: make(chan *User),
+	}
+}
+
+func (h *Hub) AddUser(user *User) {
+	if _, ok := h.Users[user.Name]; !ok {
+		h.Users[user.Name] = user
+	}
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -33,17 +61,19 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println(r.Form)
+
 	for {
-		chat := &Chat{}
-		err = conn.ReadJSON(chat)
+		msg := &Messages{}
+		err = conn.ReadJSON(msg)
 		if err != nil {
 			log.Println(err)
 			return
 		}
 
-		chat.Time = time.Now().Format("2006-01-02 15:04:05")
-		log.Println(chat.Name + ": " + chat.Message + " " + chat.Time)
-		err = conn.WriteJSON(chat)
+		msg.Time = time.Now().Format("2006-01-02 15:04:05")
+		log.Println(msg.Name + ": " + msg.Message + " " + msg.Time)
+		err = conn.WriteJSON(msg)
 		if err != nil {
 			log.Println(err)
 			return
