@@ -1,27 +1,48 @@
 import React, { useState } from 'react';
 import SetNameModal from './SetNameModal'
 import './App.css';
-import websocket from './index';
 
 const App = () => {
   const [modalShow, setModalShow] = useState(true);
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
+  const [websocket, setWebsocket] = useState(undefined);
 
   const onChange = (e) => {
     setMessage(e.target.value) 
   }
   
   const onClick = () => {
-    var newMessageList = messageList.concat(message)
-    setMessageList(newMessageList)
-    websocket.sendMessage(name, message)
+    sendMessage(name, message)
   }
 
   const onStart = (name) => {
+    let ws = new WebSocket("ws://" + window.location.host + "/ws")
+    ws.onopen = (e) => {
+      console.log("onopen")
+    }
+
+    ws.onclose = (e) => {
+      console.log("onclose")
+    }
+
+    ws.onmessage = (message) => {
+      console.log(message.data)
+      // var newMessageList = messageList.concat(JSON.parse(message.data))
+      // setMessageList(newMessageList)
+    }
+
+    setWebsocket(ws)
     setName(name)
     setModalShow(false)
+  }
+
+  const sendMessage = (name, message) => {
+    websocket.send(JSON.stringify({
+        name: name,
+        message: message
+    }))
   }
 
   return (

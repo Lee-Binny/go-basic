@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
@@ -15,31 +15,35 @@ var wsupgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-type Message struct {
-	Name string `json:"name"`
-	Data string `json:"data"`
+type Chat struct {
+	Name    string `json:"name"`
+	Message string `json:"message"`
+	Time    string `json:"time"`
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	conn, err := wsupgrader.Upgrade(w, r, nil)
-	defer conn.Close()
+	defer func() {
+		log.Println("disconnect!")
+		conn.Close()
+	}()
 
 	if err != nil {
-		fmt.Println("Failed to set websocket upgrade: %+v", err)
+		log.Printf("Failed to set websocket upgrade: %+v", err)
 		return
 	}
 
 	for {
-		msg := &Message{}
-		err = conn.ReadJSON(msg)
+		chat := &Chat{}
+		err = conn.ReadJSON(chat)
 		if err != nil {
 			log.Println(err)
 			return
 		}
 
-		fmt.Println(msg)
-
-		err = conn.WriteJSON(msg)
+		chat.Time = time.Now().Format("2006-01-02 15:04:05")
+		log.Println(chat.Name + ": " + chat.Message + " " + chat.Time)
+		err = conn.WriteJSON(chat)
 		if err != nil {
 			log.Println(err)
 			return
