@@ -18,7 +18,7 @@ const App = () => {
   }
 
   const onStart = (name) => {
-    let ws = new WebSocket("ws://" + window.location.host + "/ws")
+    let ws = new WebSocket("ws://" + window.location.host + "/ws?name=" + name)
     ws.onopen = (e) => {
       console.log("onopen")
     }
