@@ -1,0 +1,29 @@
+.screen {
+    padding: 1vw 5vw;
+    height: 100%;
+    width: 100%;
+}
+
+.inner-screen {
+    position: fixed;
+    max-height: calc(100vh - 170px);
+    overflow-y: scroll;
+    bottom: 80px;
+    scroll-behavior: smooth;
+    width: 100vh;
+}
+
+.inner-screen::-webkit-scrollbar {
+    display: none;
+}
+
+.chat-input {
+    position: fixed;
+    bottom: 20px;
+    width: 100vh;
+}
+
+.chat-text {
+    background-color: #4c4c4c;
+    color: #ffffff;
+}

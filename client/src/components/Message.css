@@ -1,0 +1,30 @@
+.message {
+    text-align: left;
+    padding: 0.5rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.2em;
+    margin: 0.3rem 0;
+}
+
+.message-other {
+    background-color: #f1f1f1;
+}
+
+.message-name {
+    color: #ffffff;
+    margin-right: 0.4em;
+}
+
+.message-time {
+    font-size: 0.8rem;
+    color: #908f8f;
+    display: inline;
+}
+
+.message-body {
+    color: #ffffff;
+}
+
+.message-text-other {
+    color: #4c4c4c;
+}

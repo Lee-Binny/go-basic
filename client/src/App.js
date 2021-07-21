@@ -1,19 +1,17 @@
 import React, { useState } from 'react';
-import SetNameModal from './SetNameModal'
 import './App.css';
+import SetNameModal from './components/SetNameModal'
+import ChatScreen from './components/ChatScreen';
+import ChatNav from './components/ChatNav';
+
 
 const App = () => {
   const [modalShow, setModalShow] = useState(true);
   const [name, setName] = useState('');
-  const [message, setMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
   const [websocket, setWebsocket] = useState(undefined);
-
-  const onChange = (e) => {
-    setMessage(e.target.value) 
-  }
   
-  const onClick = () => {
+  const onClick = (message) => {
     sendMessage(name, message)
   }
 
@@ -43,22 +41,16 @@ const App = () => {
     }))
   }
   return (
+    <>
+    <ChatNav name={name}/>
     <div className="App">
       <SetNameModal
         show={modalShow}
         onStart={(e) => onStart(e)}
       />
-      <p>name: {name}</p>
-      <input type="text" name="message" placeholder="텍스트를 입력해주세요" onChange={onChange}/>
-      <button onClick={onClick}>Send</button>
-      {
-        messageList.map(value => {
-          return (
-            <p>{value.name}: {value.message} {value.time}</p>
-          )
-        })
-      }
+      <ChatScreen userName={name} messageList={messageList} onClick={onClick}/>
     </div>
+    </>
   );
 }
 
