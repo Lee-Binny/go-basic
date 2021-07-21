@@ -1,4 +1,5 @@
 # go-chat
+The project to create a chat application using Golang and React.
 
 ### Install
 ```shell
@@ -16,3 +17,4 @@ cd ../server
 go run .
 ```
 http://localhost:3030/
+
