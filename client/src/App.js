@@ -28,9 +28,7 @@ const App = () => {
     }
 
     ws.onmessage = (message) => {
-      console.log(message.data)
-      // var newMessageList = messageList.concat(JSON.parse(message.data))
-      // setMessageList(newMessageList)
+      setMessageList(prev => [...prev, JSON.parse(message.data)])
     }
 
     setWebsocket(ws)
@@ -44,7 +42,6 @@ const App = () => {
         message: message
     }))
   }
-
   return (
     <div className="App">
       <SetNameModal
@@ -54,11 +51,13 @@ const App = () => {
       <p>name: {name}</p>
       <input type="text" name="message" placeholder="텍스트를 입력해주세요" onChange={onChange}/>
       <button onClick={onClick}>Send</button>
-      {messageList.map(value => {
-        return (
-          <p>{name} : {value}</p>
-        )
-      })}
+      {
+        messageList.map(value => {
+          return (
+            <p>{value.name}: {value.message} {value.time}</p>
+          )
+        })
+      }
     </div>
   );
 }
