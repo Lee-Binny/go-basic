@@ -1,5 +1,5 @@
 # go-chat
-The project to create a chat application using Golang and React.
+The project to create a real-time chat application using Golang(gin, gorilla) and React.
 
 ### Install
 ```shell
