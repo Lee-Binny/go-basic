@@ -21,6 +21,6 @@ go run .
 ```
 http://localhost:3030/
 
-chat.lee-binnt.ml
+chat.lee-binny.ml
 
 <img width="1680" alt="go-chat" src="https://user-images.githubusercontent.com/25112694/126584685-0adeb9b1-9245-404b-958e-5a18b4c2155b.gif">
